@@ -19,7 +19,6 @@ contract OldToken is Ownable, UpgradeAgent, MintableToken {
     function upgrade(uint256 value) public {
       // Validate input value.
         require(value != 0);
-        require(newTokenAddr != address(0));
         require(getUpgradeState() == UpgradeState.Ready || getUpgradeState() == UpgradeState.Upgrading);
 
         balances[msg.sender] = balances[msg.sender].sub(value);
@@ -27,7 +26,7 @@ contract OldToken is Ownable, UpgradeAgent, MintableToken {
         totalSupply_ = totalSupply_.sub(value);
         totalUpgraded = totalUpgraded.add(value);
         // Upgrade agent reissues the tokens
-        ReceiverInterface(newTokenAddr).upgradeFrom(msg.sender, value);
+        require(ReceiverInterface(newTokenAddr).upgradeFrom(msg.sender, value));
         Upgrade(msg.sender, newTokenAddr, value);
     }
 
