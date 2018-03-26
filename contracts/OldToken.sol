@@ -1,11 +1,13 @@
-praggma solidity ^0.4.17;
+pragma solidity ^0.4.16;
 
 import "zeppelin-solidity/contracts/ownership/Ownable.sol";
 import "zeppelin-solidity/contracts/token/ERC20/MintableToken.sol";
+import "./UpgradeAgent.sol";
+import "./ReceiverInterface.sol";
 
 
 contract OldToken is Ownable, UpgradeAgent, MintableToken {
-
+    
     function setUpgradeAgent(address _newTokenAddr) public onlyOwner {
         require(ReceiverInterface(_newTokenAddr).isUpgradeAgent());
         newTokenAddr = _newTokenAddr;
@@ -18,9 +20,11 @@ contract OldToken is Ownable, UpgradeAgent, MintableToken {
       // Validate input value.
         require(value != 0);
         require(newTokenAddr != address(0));
+        require(getUpgradeState() == UpgradeState.Ready || getUpgradeState() == UpgradeState.Upgrading);
+
         balances[msg.sender] = balances[msg.sender].sub(value);
         // Take tokens out from circulation
-        totalSupply = totalSupply.sub(value);
+        totalSupply_ = totalSupply_.sub(value);
         totalUpgraded = totalUpgraded.add(value);
         // Upgrade agent reissues the tokens
         ReceiverInterface(newTokenAddr).upgradeFrom(msg.sender, value);

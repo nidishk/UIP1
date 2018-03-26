@@ -1,4 +1,4 @@
-praggma solidity ^0.4.17;
+pragma solidity ^0.4.16;
 
 import "./OldToken.sol";
 import "./ReceiverInterface.sol";
@@ -6,7 +6,13 @@ import "./ReceiverInterface.sol";
 
 contract UIP1Token is ReceiverInterface, OldToken {
 
-    function isUpgradeAgent() public constant returns (bool) {
+    address public oldTokenAddr;
+
+    function UIP1Token (address _oldTokenAddr) public {
+        oldTokenAddr = _oldTokenAddr;
+    }
+
+    function isUpgradeAgent() public pure returns (bool) {
         return true;
     }
 
@@ -19,6 +25,8 @@ contract UIP1Token is ReceiverInterface, OldToken {
         // Validate input value.
         balances[_from] = balances[_from].add(value);
         // Take tokens out from circulation
-        totalSupply = totalSupply.add(value);
+        totalSupply_ = totalSupply_.add(value);
     }
+
+
 }
