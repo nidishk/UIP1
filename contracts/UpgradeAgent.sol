@@ -11,7 +11,7 @@ contract UpgradeAgent is ERC20 {
     event Upgrade(address indexed _from, address indexed newTokenAddr, uint256 _value);
     enum UpgradeState { Waiting, Ready, Upgrading, Complete }
 
-    function getUpgradeState() public constant returns(UpgradeState) {
+    function getUpgradeState() public constant returns (UpgradeState) {
         
         if (newTokenAddr == 0x00) {
             return UpgradeState.Waiting;

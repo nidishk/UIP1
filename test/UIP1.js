@@ -48,4 +48,20 @@ contract('UIP1', (accounts) => {
     assert.equal((await token.totalUpgraded.call()).toNumber(), 2000, 'totalUpgraded in old contract unchanged');        
     assert.equal((await newToken.totalSupply.call()).toNumber(), 2000, 'totalSupply in new contract unchanged');    
   });
+
+
+  it('should not allow to call upgradeFrom from random address', async () => {
+
+    const INVESTOR = accounts[0];
+    const newToken = await UIP1Token.new(token.address);
+
+    await token.setUpgradeAgent(newToken.address);
+
+    try {
+      await newToken.upgradeFrom(accounts[0], 1000);
+      assert.fail('should have failed before');
+    } catch (error) {
+      assertJump(error);
+    }  
+  });
 })

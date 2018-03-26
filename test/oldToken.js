@@ -42,4 +42,32 @@ contract('OldToken', (accounts) => {
     assert.equal(await token.getUpgradeState.call(), 0, 'upgrade state not displayed properly');
   });
 
+   it('should not allow to upgrade to new contract if value 0', async () => {
+
+    const INVESTOR = accounts[0];
+    const newToken = await UIP1Token.new(token.address);
+
+    await token.setUpgradeAgent(newToken.address);
+
+    try {
+      await token.upgrade(0);
+      assert.fail('should have failed before');
+    } catch (error) {
+      assertJump(error);
+    }
+  
+  });
+
+  it('should not allow to upgrade to new contract if upgradeAgent not set', async () => {
+
+    const INVESTOR = accounts[0];
+
+    try {
+      await token.upgrade(1000);
+      assert.fail('should have failed before');
+    } catch (error) {
+      assertJump(error);
+    }
+  
+  });
 })
