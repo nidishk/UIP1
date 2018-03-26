@@ -1,4 +1,4 @@
-# UIP1
+# Upgradeability Improvement Protocol (UIP) 1
 The upgrade agent approach to upgradeability
 
 # installation
@@ -16,7 +16,7 @@ npm test
 or run individual tests:
 
 ```
-npm test test/token.js
+npm test test/oldToken.js
 ```
 
 # code coverage
